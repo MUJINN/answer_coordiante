@@ -1,0 +1,18 @@
+{
+  "model_name": "doubao-seed-1.8",
+  "model_names": [
+    "doubao-seed-1-6-vision-250815",
+    "doubao-seed-1.6-251015",
+    "dobbao-seed-1.8"
+  ],
+  "agent_id": "ocr_model_x",
+  "taskKey": "",
+  "key": "",
+  "grade": "",
+  "problem": "",
+  "answer": "",
+  "totalScore": 0,
+  "subject_name": "化学",
+  "question_type": "解答题",
+  "prompt": "【注意事项】\\n一、结构：识别电子排布式（3dⁿ4sⁿ）、电极反应式（含NiO(OH)、e⁻）、溶度积分析、pH、化学方程式、晶胞计算式。\\n二、核心：化学符号（Ni、Cd）、离子（Ni²⁺、OH⁻）、Ksp、⇌、Nₐ、a/c晶胞参数。\\n三、易混：手写上下标（如3d⁸）、O/0、l/1、e⁻与减号、Ksp大小写。\\n四、连贯：保持反应式结构、晶胞公式分子分母完整。"
+}

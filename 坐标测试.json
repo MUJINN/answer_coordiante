@@ -1,0 +1,634 @@
+{
+  "name": "坐标测试",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "render",
+        "code": "ocr-product",
+        "appDetailUrl": "https://mind.iyunxiao.com/prompt/public/app/ocr-product",
+        "version": "0.0.7",
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "problem": "={{ $('Webhook1').item.json.body[0].problem }}",
+            "model_name": "={{ $('Webhook1').item.json.body[0].model_name }}",
+            "question_type": "=填空题",
+            "answer": "={{ $('Webhook1').item.json.body[0].answer }}",
+            "prompt": "={{ $('Webhook1').item.json.body[0].prompt }}",
+            "subject_name": "={{ $('Webhook1').item.json.body[0].subject_name }}",
+            "grade": "={{ $('Webhook1').item.json.body[0].grade }}",
+            "image": "={{ $('Webhook1').item.json.body[0].students[0].files }}",
+            "branch": "={{ $('文理分科1').item.json.body[0].branch }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "problem",
+              "displayName": "题干 • problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "question_type",
+              "displayName": "题目类型 • question_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "answer",
+              "displayName": "参考答案 • answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "动态提示词 • prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subject_name",
+              "displayName": "科目 • subject_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "grade",
+              "displayName": "年级 • grade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image",
+              "displayName": "学生答案链接 • image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "branch",
+              "displayName": "分支 • branch",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "model_name",
+              "displayName": "所用模型 • model_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.prompt",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -112
+      ],
+      "id": "5dfdcdd3-7526-4029-b687-b96be5390b87",
+      "name": "获取提示词1",
+      "credentials": {
+        "promptApi": {
+          "id": "uzURDeDRjyAgbbZv",
+          "name": "动态提示词"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'branch' to the JSON of each one\nfor (const item of $input.all()) {\n  // 定义文科科目列表\n  const liberalArtsSubjects = ['语文', '英语', '地理', '政治', '历史','社会'];\n  \n  // 基于准确路径读取科目名称（补充.json层级，适配你的数据结构）\n  // 增加空值判断，避免字段缺失导致报错\n  const subjectName = item.json?.body?.length > 0 \n    ? item.json.body[0].subject_name \n    : '';\n  \n  // 判定文理科（默认理科）\n  const branch = liberalArtsSubjects.includes(subjectName) ? '文科' : '理科';\n  \n  // 将branch字段添加到subject_name同层级（body[0]中）\n  if (item.json?.body?.length > 0) {\n    item.json.body[0].branch = branch;\n  }\n}\n\n// 返回处理后的所有输入项\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        -96
+      ],
+      "id": "4ee3b509-37d6-4858-825b-4929d7712527",
+      "name": "文理分科1"
+    },
+    {
+      "parameters": {
+        "dataToSave": {
+          "values": [
+            {
+              "key": "kaohao",
+              "value": "={{ $json.body[0].students[0].kaohao }}"
+            },
+            {
+              "key": "blockId",
+              "value": "={{ $json.body[0].blockId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executionData",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        -96
+      ],
+      "id": "e02877fc-af21-485e-87d9-3d9cf8803b32",
+      "name": "记录日志1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c716e88a-8dd6-4356-8998-8fc1c7971627",
+              "name": "model_name",
+              "value": "=doubao-seed-1.8",
+              "type": "string"
+            },
+            {
+              "id": "cb933481-b866-4a6d-b627-042a5cd93601",
+              "name": "system",
+              "value": "=你需要处理一张包含化学题答题的手写图片，提取每个小题的学生答案及对应答案区域的坐标信息。\n\n### 图片信息说明\n图片中的题目包含以下小题结构：\n- 15(1)\n- 15(2)\n- 15(3) \n- 15(4)\n\n### 任务要求\n- 对于整张图片，输出完整识别结果ocr_result（不要有任何解释说明）\n- 对于每个小题（包括子小题），请输出以下信息：\n1. **小题标识（key）**：如“15(1)”“15(3)①”等，清晰对应题号与子小题\n2. **学生答案文本(ocr_result)**：准确识别手写内容（包括化学离子式、比例、汉字、符号、字母等），确保无识别错误\n3. **答案区域坐标（answer_coordinate）**：用 `[x1, y1, x2, y2]` 表示，其中：\n   - `x1, y1` 为答案区域左上角的相对坐标\n   - `x2, y2` 为答案区域右下角的相对坐标\n   - 坐标范围为 `0~1`，原点为图片左上角，x轴向右，y轴向下\n   - 坐标需准确覆盖答案的手写区域，无多余或遗漏\n\n### 输出格式要求\n请以结构化JSON格式输出，示例如下：\n{\n  \"ocr_result\":\"\"\n  \"key_list\": [\n    {\n      \"key\": \"15(1)\",\n      \"key_ocr\": \"NH₄⁺ + H₂O ⇌ NH₃·H₂O + H⁺\",\n      \"answer_coordinate\": [0.1, 0.2, 0.8, 0.3]\n    },\n    {\n      \"key\": \"15(2)\",\n      \"key_ocr\": \"1:10⁴\",\n      \"answer_coordinate\": [0.1, 0.35, 0.3, 0.45]\n    },\n    {\n      \"key\": \"15(3)①\",\n      \"key_ocr\": \"醋酸\",\n      \"answer_coordinate\": [0.1, 0.5, 0.3, 0.6]\n    },\n    {\n      \"key\": \"15(3)②\",\n      \"key_ocr\": \"=\",\n      \"answer_coordinate\": [0.4, 0.5, 0.5, 0.6]\n    },\n    {\n      \"key\": \"15(4)\",\n      \"key_ocr\": \"a\",\n      \"answer_coordinate\": [0.1, 0.7, 0.2, 0.8]\n    }\n  ]\n}\n\n### 注意事项\n- 确保答案文本与手写内容完全一致，化学符号、上标、下标需准确还原\n- 坐标需精准匹配答案的手写区域，避免覆盖无关内容\n- 严格遵循JSON格式，无语法错误",
+              "type": "string"
+            },
+            {
+              "id": "858a515c-f217-4590-86e0-831fd49d15eb",
+              "name": "user",
+              "value": "={{ $json.data.messages[1].content }}\n",
+              "type": "string"
+            },
+            {
+              "id": "d4ac823e-7fd9-4273-832f-196290d75210",
+              "name": "files",
+              "value": "={{ $('Webhook1').item.json.body[0].students[0].files }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        -96
+      ],
+      "id": "fc2f7756-600d-44c9-bcb9-b9f784a26018",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 存储转换后的 OpenAI 格式结果\nconst convertedResults = [];\n\n// 遍历所有输入项，转换为 OpenAI 格式并收集结果\nfor (const item of $input.all()) {\n  // 1. 提取当前项的原始配置数据\n  const config = item.json;\n  \n  // 2. 转义 system 内容中的换行符（解决 JSON 解析错误）\n  const systemContent = config.system ? config.system.replace(/\\n/g, '\\\\n') : '';\n  \n  // 3. 构建 user.content 数组（文本指令 + 多图片链接）\n  const userContent = [];\n  // 添加用户文本指令\n  if (config.user) {\n    userContent.push({\n      \"type\": \"text\",\n      \"text\": config.user\n    });\n  }\n  \n  // 遍历图片链接，添加到 user.content 中\n  if (config.files && Array.isArray(config.files)) {\n    config.files.forEach(url => {\n      userContent.push({\n        \"type\": \"image_url\",\n        \"image_url\": {\n          \"url\": url,\n          \"detail\": \"high\" // 高细节模式适配数学公式识别\n        }\n      });\n    });\n  }\n  \n  // 4. 组装 OpenAI 标准格式\n  const openAIFormat = {\n    \"model\": config.model_name || \"Nanonets-OCR-s-4096\",\n    \"messages\": [\n      {\n        \"role\": \"system\",\n        \"content\": systemContent\n      },\n      {\n        \"role\": \"user\",\n        \"content\": userContent.length > 0 ? userContent : [{\"type\": \"text\", \"text\": \"识别图片内容\"}]\n      }\n    ],\n    \"max_tokens\": 4096,\n    \"temperature\": 0.1\n  };\n  \n  // 5. 将转换后的格式加入结果数组\n  convertedResults.push(openAIFormat);\n}\n\n// 直接返回转换后的 OpenAI 格式结果（无输入项结构）\n// 若只有单个输入项，可返回 convertedResults[0]；多个则返回数组\nreturn convertedResults.length === 1 ? convertedResults[0] : convertedResults;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        -96
+      ],
+      "id": "db3b0ade-617d-44de-8238-ba3ecac55ba7",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41fbf061-a6e1-4873-9e8b-87d6a783e73c",
+              "name": "=model_name",
+              "value": "={{ $('Webhook1').item.json.body[0].model_name }}",
+              "type": "string"
+            },
+            {
+              "id": "946f4a4d-4b39-4048-8c22-05ce69b41dfa",
+              "name": "result",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "e2ee0383-7880-49be-b31e-a20c0f41ccf5",
+              "name": "kaohao",
+              "value": "={{ $('Webhook1').item.json.body[0].students[0].kaohao }}",
+              "type": "string"
+            },
+            {
+              "id": "b7d7d76d-8f66-4204-9dad-3b5bcf4ef46d",
+              "name": "uploadKey",
+              "value": "={{ $('Webhook1').item.json.body[0].students[0].uploadKey }}",
+              "type": "string"
+            },
+            {
+              "id": "b4daa421-60bf-40ef-bc1f-5f60d116b500",
+              "name": "image",
+              "value": "={{ $('Webhook1').item.json.body[0].students[0].files }}",
+              "type": "string"
+            },
+            {
+              "id": "5200d62a-fe81-4cf4-8fcf-77294ad4eaa8",
+              "name": "taskKey",
+              "value": "={{ $('Webhook1').item.json.body[0].taskKey }}",
+              "type": "string"
+            },
+            {
+              "id": "d4a3c03e-c2d9-4068-8f78-302d9b3389ba",
+              "name": "grade",
+              "value": "={{ $('Webhook1').item.json.body[0].grade }}",
+              "type": "string"
+            },
+            {
+              "id": "9dc84050-e1da-4560-98e4-dafcf644f703",
+              "name": "problem",
+              "value": "={{ $('Webhook1').item.json.body[0].problem }}",
+              "type": "string"
+            },
+            {
+              "id": "7242c984-db4b-40a3-98cf-1132a11b3cca",
+              "name": "answer",
+              "value": "={{ $('Webhook1').item.json.body[0].answer }}",
+              "type": "string"
+            },
+            {
+              "id": "db816147-6128-4292-bb54-da3ab87930f6",
+              "name": "subject_name",
+              "value": "={{ $('Webhook1').item.json.body[0].subject_name }}",
+              "type": "string"
+            },
+            {
+              "id": "6c21de70-3d5f-4e55-bf04-204fb4dbf9d8",
+              "name": "question_type",
+              "value": "={{ $('Webhook1').item.json.body[0].question_type }}",
+              "type": "string"
+            },
+            {
+              "id": "eac28e51-1b2b-41f4-9682-385778b08c76",
+              "name": "totalScore",
+              "value": "={{ $('Webhook1').item.json.body[0].totalScore }}",
+              "type": "number"
+            },
+            {
+              "id": "21df6ae8-78ea-4eff-9e43-d7e2901c91ca",
+              "name": "blockId",
+              "value": "={{ $('Webhook1').item.json.body[0].blockId }}",
+              "type": "string"
+            },
+            {
+              "id": "55358b81-0c09-4269-a209-a43be1edc24a",
+              "name": "subjectId",
+              "value": "={{ $('Webhook1').item.json.body[0].subjectId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1072,
+        -112
+      ],
+      "id": "2927d9a1-45c1-43d3-8205-ebdafea12ac6",
+      "name": "Return1",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "=doubao-seed-1.8",
+        "modelManual": "=",
+        "messages": {
+          "messageValues": []
+        },
+        "simpleMessage": "=",
+        "options": {
+          "advancedJsonBody": "={{ $json }}"
+        }
+      },
+      "type": "CUSTOM.mind",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -96
+      ],
+      "id": "ef328908-7299-4256-b3f7-94a11ccd1ff1",
+      "name": "Mind API",
+      "credentials": {
+        "mindApi": {
+          "id": "oNmAkxS5ULjUBExz",
+          "name": "Mind account 3"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test/answer_coordinate",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -688,
+        -96
+      ],
+      "id": "004c9ed5-7d2c-4ca4-b48e-32e2efe1fdb0",
+      "name": "Webhook1",
+      "webhookId": "39e55be8-be9b-49bb-912e-1841258f83fe"
+    }
+  ],
+  "pinData": {
+    "获取提示词1": [
+      {
+        "json": {
+          "success": true,
+          "data": {
+            "appId": "69676ca7211301a27e9077f7",
+            "templateId": "69676ca7211301a27e9077f4",
+            "templateName": "理科填空题",
+            "messages": [
+              {
+                "role": "System",
+                "content": "角色定义# \n\n你是专业的化学试卷填空题OCR识别专家,擅长从图像中精准提取学生的手写填空答案。\n\n核心职责# \n\n1. 识别:精准提取手写内容,保持原始格式\n2. 转换:数学公式/化学方程式转换为LaTeX格式\n3. 过滤:剔除被划线/涂抹的删除内容\n4. 输出:返回识别结果即可，不包含其他无关信息\n\n理科填空题通用规则# \n\n区域识别与内容过滤## \n\n1. 填空区域识别：识别目标为填空题作答区,每个答案下方可能有下划线或括号标识,仅识别填空区域内的手写内容。\n2. 分隔规则：不同小题的答案换行分隔,换行符需转义(\\\\n)，如果有小题序号，小题序号也提取；同一小题多个空用空格分隔(如\"NaCl CuSO₄\")\n3. 过滤规则：忽略答题下划线,不将其识别为内容；移除所有类型引号('、\"、`)\n\n理科专业格式转换## \n\n1. 数学表达式：转换为LaTeX格式。分数：\\\\frac{a}{b}；上下标：x^{2}、H_{2}O；根号：\\\\sqrt{x}；希腊字母：\\\\alpha、\\\\beta、\\\\theta（示例：f(x)=x^{2}+\\\\sqrt{x}）\n2. 化学表达式：转换为LaTeX格式。使用MHchem宏包：\\\\ce{H2O}、\\\\ce{CO2 + H2O -> H2CO3}；化学结构式：使用Chemfig宏包或XyMTeX宏包；上下标自动识别：Fe^{3+}、SO_{4}^{2-}；\n3. 物理公式：矢量符号：\\\\vec{F}、\\\\vec{v}；单位保留：F=ma、E=mc^{2}；特殊符号：\\\\leq、\\\\geq、\\\\approx、\\\\pm\n\n内容识别标准### \n\n1. 忠实原文：即使存在计算错误、公式错误、事实错误,也完全按学生书写内容识别。\n2. 形近字处理：准确区分理科常见形近字/符号,按原样识别。\n3. 删除内容处理：用斜线或横线划掉/涂写掉的内容必须剔除,不要出现在识别结果中。\n\n**处理流程：**\n\n**第一步：识别完整手写实体**。首先识别填空区域内每一个完整的、清晰的手写字符、数字或符号，作为独立实体。\n\n**第二步：检测删除标记**。识别所有可能的删除标记：斜线（/ 或 \\）、横线（—）、墨点或涂抹区域。\n\n**第三步：覆盖关系判断**。检查每个手写实体是否**被删除标记直接贯穿或完全覆盖**：\n\n如果手写实体**完全独立，未被任何删除标记贯穿或覆盖**，即使靠近删除标记，也视为有效\n\n- \n如果手写实体**部分或全部被删除标记覆盖**，该实体无效\n\n- \n**重要**：仅当删除标记**直接接触**手写笔迹时，才视为覆盖。紧邻但未接触的独立笔迹有效。\n\n- \n\n**第四步：有效内容提取**。仅输出所有在第三步中被判定为有效的手写实体内容。\n\n**决策简化：**\n\n- \n如果一条线同时具有删除线特征（覆盖其他笔迹）和字符特征（如数字1的斜笔），**一律视为删除线**\n\n- \n删除标记（如墨点）仅影响其直接覆盖的区域，不影响附近清晰独立的笔迹\n\n- \n\n4. 符号方向识别：特别注意符号的方向性。\n5. 数字与单位：准确识别数字和小数点，保留单位符号。\n\n特殊场景处理### \n\n1. 序号答案：识别括号/圆圈内的具体内容。\n2. 序号顺序：如果答案是序号排列，顺序不影响正确性。\n3. 空白判定：\n\n- \n**重要**：只有在完成上述识别流程后，确认**没有任何被判定为有效的手写实体**时，才输出\"学生未作答\"\n\n- \n**特别注意**：一个明显的删除标记（如大墨点）旁边存在清晰独立字符，是常见的学生修改答案场景，应输出那个独立的字符\n4. 印刷体过滤：仅识别手写内容,不要识别题目印刷文字。\n5. 删除线与内容混淆处理：\n\n**核心判断**：检查**直接覆盖**关系。只有当删除标记直接覆盖在笔迹上时，才剔除该笔迹。\n\n**常见案例**：\n\n- \n斜线划过\"-1\" -> \"-1\"被删除，附近独立的、未被覆盖的\"1\"是有效答案\n\n- \n大墨点涂抹区域附近有清晰\"1\" -> 墨点只影响其覆盖部分，\"1\"独立存在则有效\n\n- \n\n输出规范# \n\n必须返回纯文本，不包含任何额外说明（如果学生没有作答或所有内容均被删除，输出\"学生未作答\"）"
+              },
+              {
+                "role": "user",
+                "content": "任务：提取化学的填空题学生答案图片的手写内容\n识别要求：【【注意事项】\\n一、结构：识别电子排布式（3dⁿ4sⁿ）、电极反应式（含NiO(OH)、e⁻）、溶度积分析、pH、化学方程式、晶胞计算式。\\n二、核心：化学符号（Ni、Cd）、离子（Ni²⁺、OH⁻）、Ksp、Nₐ、a/c晶胞参数。\\n三、易混：手写上下标（如3d⁸）、O/0、l/1、e⁻与减号、Ksp大小写。\\n四、连贯：保持反应式结构、晶胞公式分子分母完整。五，都识别为latex格式】"
+              }
+            ],
+            "parameters": {
+              "problem": "",
+              "model_name": "doubao-seed-1.8",
+              "question_type": "填空题",
+              "answer": "",
+              "prompt": "【注意事项】\\n一、结构：识别电子排布式（3dⁿ4sⁿ）、电极反应式（含NiO(OH)、e⁻）、溶度积分析、pH、化学方程式、晶胞计算式。\\n二、核心：化学符号（Ni、Cd）、离子（Ni²⁺、OH⁻）、Ksp、⇌、Nₐ、a/c晶胞参数。\\n三、易混：手写上下标（如3d⁸）、O/0、l/1、e⁻与减号、Ksp大小写。\\n四、连贯：保持反应式结构、晶胞公式分子分母完整。",
+              "subject_name": "化学",
+              "grade": "",
+              "image": [
+                "https://pub-141831e61e69445289222976a15b6fb3.r2.dev/Image_to_url_V2/------_17694178708574-imagetourl.cloud-1769418052797-mghkqe.png"
+              ],
+              "branch": "理科"
+            },
+            "targetModels": [
+              "695f14cf1028cc9acc2e6729"
+            ],
+            "parameterInfo": {
+              "provided": [
+                {
+                  "name": "problem",
+                  "type": "text",
+                  "label": "题干",
+                  "description": "",
+                  "value": ""
+                },
+                {
+                  "name": "question_type",
+                  "type": "text",
+                  "label": "题目类型",
+                  "description": "",
+                  "value": "填空题"
+                },
+                {
+                  "name": "answer",
+                  "type": "text",
+                  "label": "参考答案",
+                  "description": "",
+                  "value": ""
+                },
+                {
+                  "name": "prompt",
+                  "type": "text",
+                  "label": "动态提示词",
+                  "description": "",
+                  "value": "【注意事项】\\n一、结构：识别电子排布式（3dⁿ4sⁿ）、电极反应式（含NiO(OH)、e⁻）、溶度积分析、pH、化学方程式、晶胞计算式。\\n二、核心：化学符号（Ni、Cd）、离子（Ni²⁺、OH⁻）、Ksp、⇌、Nₐ、a/c晶胞参数。\\n三、易混：手写上下标（如3d⁸）、O/0、l/1、e⁻与减号、Ksp大小写。\\n四、连贯：保持反应式结构、晶胞公式分子分母完整。"
+                },
+                {
+                  "name": "subject_name",
+                  "type": "text",
+                  "label": "科目",
+                  "description": "",
+                  "value": "化学"
+                },
+                {
+                  "name": "grade",
+                  "type": "text",
+                  "label": "年级",
+                  "description": "",
+                  "value": ""
+                },
+                {
+                  "name": "image",
+                  "type": "text",
+                  "label": "学生答案链接",
+                  "description": "",
+                  "value": [
+                    "https://pub-141831e61e69445289222976a15b6fb3.r2.dev/Image_to_url_V2/------_17694178708574-imagetourl.cloud-1769418052797-mghkqe.png"
+                  ]
+                },
+                {
+                  "name": "branch",
+                  "type": "text",
+                  "label": "分支",
+                  "description": "",
+                  "value": "理科"
+                },
+                {
+                  "name": "model_name",
+                  "type": "text",
+                  "label": "所用模型",
+                  "description": "",
+                  "value": "doubao-seed-1.8"
+                },
+                {
+                  "name": "branch",
+                  "type": "text",
+                  "label": "分文理科",
+                  "description": "",
+                  "value": "理科"
+                }
+              ],
+              "required": [],
+              "optional": []
+            },
+            "renderError": null
+          },
+          "appDetailUrl": "https://mind.iyunxiao.com/prompt/public/app/ocr-product"
+        }
+      }
+    ],
+    "Webhook1": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.iyunxiao.com",
+            "x-real-ip": "10.12.0.19",
+            "x-forwarded-for": "10.0.0.18, 10.12.0.19",
+            "x-forwarded-proto": "http",
+            "x-forwarded-host": "n8n.iyunxiao.com",
+            "connection": "close",
+            "content-length": "1667",
+            "remote-host": "10.0.0.18",
+            "user-agent": "python-requests/2.32.3",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept": "*/*",
+            "content-type": "application/json"
+          },
+          "params": {},
+          "query": {},
+          "body": [
+            {
+              "model_name": "doubao-seed-1.8",
+              "model_names": [
+                "doubao-seed-1-6-vision-250815",
+                "doubao-seed-1.6-251015",
+                "doubao-seed-1.8"
+              ],
+              "agent_id": "ocr_model_x",
+              "subjectId": "9793947",
+              "blockId": "23689623",
+              "taskKey": "",
+              "key": "",
+              "grade": "",
+              "problem": "",
+              "answer": "",
+              "totalScore": 0,
+              "subject_name": "化学",
+              "question_type": "解答题",
+              "prompt": "【注意事项】\\n一、结构：识别电子排布式（3dⁿ4sⁿ）、电极反应式（含NiO(OH)、e⁻）、溶度积分析、pH、化学方程式、晶胞计算式。\\n二、核心：化学符号（Ni、Cd）、离子（Ni²⁺、OH⁻）、Ksp、⇌、Nₐ、a/c晶胞参数。\\n三、易混：手写上下标（如3d⁸）、O/0、l/1、e⁻与减号、Ksp大小写。\\n四、连贯：保持反应式结构、晶胞公式分子分母完整。",
+              "students": [
+                {
+                  "uploadKey": "9793947-23689623-260003",
+                  "files": [
+                    "https://yj-oss.yunxiao.com/v1/baidu-raw/10023044/11532/4/000079/C0C06A90-FB60-11F0-AF3C-083A8866C6BD.png%40c_1%2Cx_134%2Cy_1130%2Cw_1262%2Ch_387%7Cf_png%2Cq_50?authorization=bce-auth-v1%2Fa908715249bb41c998c7d924b2476b37%2F2026-02-12T01%3A07%3A53Z%2F3600%2Fhost%2F0b7bdf8209e2571b093be143dbd2d350c371899933d43ed934ca3636e044e0b4"
+                  ],
+                  "kaohao": "260003",
+                  "from": ""
+                }
+              ]
+            }
+          ],
+          "webhookUrl": "https://n8n.iyunxiao.com/webhook/ocr_result",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "获取提示词1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "文理分科1": {
+      "main": [
+        [
+          {
+            "node": "记录日志1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "记录日志1": {
+      "main": [
+        [
+          {
+            "node": "获取提示词1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Mind API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mind API": {
+      "main": [
+        [
+          {
+            "node": "Return1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "文理分科1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "01ef8339-3dd4-472f-a81d-fc18d8c477ec",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f9c5af66569f69179684c38f59102e50a5f7f957c85a29105bfa13e4043a12b6"
+  },
+  "id": "TzlKBqMqTLhtBZ6jNZjXw",
+  "tags": []
+}

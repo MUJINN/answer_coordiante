@@ -1,0 +1,7 @@
+__pycache__/
+test_output/
+batch_viewer copy/
+*.png
+*.jpg
+*.jpeg
+.claude/
